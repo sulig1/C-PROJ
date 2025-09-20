@@ -16,7 +16,7 @@ jobs:
       - name: AWS Configuration
         uses: aws-actions/configure-aws-credentials@v4
         with:  
-          aws-region: us-east-2
+          aws-region: ${{ secrets.AWS_REGION}}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           
@@ -27,7 +27,7 @@ jobs:
 
       - name: Build and Push to ECR
         run: |
-          Image_URI=${{ secrets.AWS_URI }}
+          Image_URI=${{ secrets.ECR_URI }}
           docker build -t threatimage ./app
           docker tag threatimage $Image_URI:latest
           docker push $Image_URI:latest
