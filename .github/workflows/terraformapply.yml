@@ -39,7 +39,7 @@ jobs:
 
       - name: Terraform Bootstrap Plan
         run: |
-          cd terraform-boostrap
+          cd terraform-bootstrap
           terraform init
           terraform plan
 
