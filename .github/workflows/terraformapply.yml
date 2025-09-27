@@ -43,7 +43,11 @@ jobs:
 
       - name: Terraform Apply (Bootstrap)
         working-directory: terraform-bootstrap 
-        run: terraform apply --auto-approve
+        run: |
+          terraform apply -var="access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
+          -var="region=${{ secrets.AWS_REGION }}" \
+          -var="secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+          -input=false -no-color
 
 
 
