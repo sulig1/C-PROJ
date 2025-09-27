@@ -2,9 +2,7 @@ name: Terraform Bootstrap
 
 
 on: 
-  push: 
-    branches: 
-      - main
+ workflow_dispatch: #this runs manually as it doesnt have to change once s3 and dynamodb are created 
 # on: 
 #   workflow_run: 
 #     workflows: ["Build and Push Docker Image To ECR"]
@@ -52,16 +50,7 @@ jobs:
 
 
       
-      # - name: Terraform Plan (save to file and show)
-      #   run: |
-      #     terraform plan -out=tfplan
-      #     terraform show -no-color tfplan
-
-      # - name: Upload Plan Artifact
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: tfplan
-      #     path: tfplan
+     
 
 
 
@@ -70,13 +59,6 @@ jobs:
 
 
 
-#code checkout
-#terraform setup
-#aws config
-#terraform init
-#terraform validate
-#terraform plan 
-#terraform 
 
 
 
