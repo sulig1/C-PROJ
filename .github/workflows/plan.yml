@@ -23,12 +23,18 @@ jobs:
             aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-        - name: Terraform init & Plan
+        - name: Terraform init 
           working-directory: terraform
-          run: |
-            terraform init -input=false -no-color
+          run: terraform init -input=false -no-color
+
+        - name: Terraform validate
+          working-directory: terraform
+          run: 
             terraform validate 
-            terraform plan -output=tfplan -input=false -no-color
+
+        - name: Terraform Plan
+          working-directory: terraform
+          run: terraform plan -out=tfplan -input=false -no-color
           
         - name: Save Plan
           uses: actions/upload-artifact@v4
