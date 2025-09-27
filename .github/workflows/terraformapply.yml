@@ -1,4 +1,4 @@
-name: Terraform Plan
+name: Terraform Bootstrap
 
 
 on: 
@@ -41,19 +41,13 @@ jobs:
           -var="secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
           -input=false -no-color
 
+      - name: Terraform Apply (Bootstrap)
+        working-directory: terraform-bootstrap 
+        run: terraform apply --auto-approve
 
 
-      - name: Terraform Main Plan
-        working-directory: terraform
-        run: |
-          terraform init -input=false -no-color
-          terraform validate
-          echo "The following is the main terraform plan: "
-          terraform plan -var="access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
-          -var="region=${{ secrets.AWS_REGION }}" \
-          -var="secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
-          -input=false -no-color
 
+      
       # - name: Terraform Plan (save to file and show)
       #   run: |
       #     terraform plan -out=tfplan
