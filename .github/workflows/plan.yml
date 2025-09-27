@@ -1,0 +1,73 @@
+name: Terraform Plan
+
+on: 
+  push: 
+    branches: 
+      - main
+
+jobs: 
+    plan: 
+        runs-on: ubuntu-latest
+
+        steps: 
+        - name: Checkout Code
+          uses: actions/checkout@v3
+
+        - name: Terraform Install
+          uses:  hashicorp/setup-terraform@v3
+
+        - name: AWS config
+          uses: aws-actions/configure-aws-credentials@v4
+          with: 
+            aws-region: ${{ secrets.AWS_REGION }}
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+        - name: Terraform init & Plan
+          working-directory: terraform
+          run: |
+            terraform init -input=false -no-color
+            terraform validate 
+            terraform plan -output=tfplan -input=false -no-color
+          
+        - name: Save Plan
+          uses: actions/upload-artifact@v3
+          with: 
+            name: tfplan
+            path: terraform/tfpath
+
+
+
+
+
+          #terraform init
+          #terraform validate 
+          #terraform plan 
+          #upload/save plan into tfplan
+
+        
+
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+ # - name: Terraform Plan (save to file and show)
+      #   run: |
+      #     terraform plan -out=tfplan
+      #     terraform show -no-color tfplan
+
+      # - name: Save Plan Artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: tfplan
+      #     path: tfplan
