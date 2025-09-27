@@ -1,12 +1,17 @@
 name: Terraform apply 
 
+
 on: 
-  workflow_run: 
-    workflows: ["Build and Push Docker Image To ECR"]
-    types: 
-      - completed
+  push: 
     branches: 
       - main
+# on: 
+#   workflow_run: 
+#     workflows: ["Build and Push Docker Image To ECR"]
+#     types: 
+#       - completed
+#     branches: 
+#       - main
 
 jobs: 
   build: 
