@@ -26,7 +26,7 @@ resource "aws_dynamodb_table" "terra-locks" {
 
 variable "region" {
     description = "AWS access key"
-  
+    
 }
 
 variable "access_key" {
