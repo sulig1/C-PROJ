@@ -47,6 +47,7 @@ jobs:
         run: |
           cd ../terraform 
           terraform init
+          echo "about to create a terraform plan"
           terraform plan 
 
       # - name: Terraform Plan (save to file and show)
