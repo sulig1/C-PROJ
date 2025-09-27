@@ -1,9 +1,10 @@
 name: Terraform apply 
 
 on: 
-  push: 
-    branches: 
-      - main
+  workflow_run: 
+    workflows: [Build and Push Docker Image To ECR]
+    types: 
+      - completed
 
 jobs: 
   build: 
@@ -29,8 +30,17 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      - name: Terraform Plan
-        run: terraform plan
+      - name: Terraform Bootstrap Plan
+        run: |
+          cd terraform-boostrap
+          terraform init
+          terraform plan
+
+      - name: Terraform Main Plan
+        run: |
+          cd ../terraform 
+          terraform init
+          terraform plan 
 
       # - name: Terraform Plan (save to file and show)
       #   run: |
