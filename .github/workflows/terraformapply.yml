@@ -1,4 +1,4 @@
-name: Terraform apply 
+name: Terraform Plan
 
 
 on: 
@@ -31,22 +31,19 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - name: Initialize Terraform 
-        run: terraform init 
-
-      - name: Terraform Validate
-        run: terraform validate
-
       - name: Terraform Bootstrap Plan
         run: |
           cd terraform-bootstrap
           terraform init
+          terraform validate
           terraform plan
 
       - name: Terraform Main Plan
         run: |
-          cd ../terraform 
+          cd ..
+          cd terraform
           terraform init
+          terraform validate
           echo "about to create a terraform plan"
           terraform plan 
 
