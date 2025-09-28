@@ -51,3 +51,8 @@ variable "private2_subnet" {
   
 }
 
+variable "cert_arn" {
+    type = string
+  
+}
+

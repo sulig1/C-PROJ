@@ -21,6 +21,7 @@ module "alb" {
     private1_subnet = module.vpc.private_subnet1
     private2_subnet = module.vpc.private_subnet2
     ecs_sg1 = module.vpc.ecs_sg
+    cert_arn = module.acm.certificate_arn
 
 }
 
