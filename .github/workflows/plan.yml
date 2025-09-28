@@ -1,48 +1,48 @@
-name: Terraform Plan
+# name: Terraform Plan
 
-on: 
-  push: 
-    branches: 
-      - main
+# on: 
+#   push: 
+#     branches: 
+#       - main
 
-jobs: 
-    plan: 
-        runs-on: ubuntu-latest
+# jobs: 
+#     plan: 
+#         runs-on: ubuntu-latest
 
-        steps: 
-        - name: Checkout Code
-          uses: actions/checkout@v3
+#         steps: 
+#         - name: Checkout Code
+#           uses: actions/checkout@v3
 
-        - name: Terraform Install
-          uses:  hashicorp/setup-terraform@v3
+#         - name: Terraform Install
+#           uses:  hashicorp/setup-terraform@v3
 
-        - name: AWS config
-          uses: aws-actions/configure-aws-credentials@v4
-          with: 
-            aws-region: ${{ secrets.AWS_REGION }}
-            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#         - name: AWS config
+#           uses: aws-actions/configure-aws-credentials@v4
+#           with: 
+#             aws-region: ${{ secrets.AWS_REGION }}
+#             aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-        - name: Terraform init 
-          working-directory: terraform
-          run: terraform init -input=false -no-color
+#         - name: Terraform init 
+#           working-directory: terraform
+#           run: terraform init -input=false -no-color
 
-        - name: Terraform validate
-          working-directory: terraform
-          run: 
-            terraform validate 
+#         - name: Terraform validate
+#           working-directory: terraform
+#           run: 
+#             terraform validate 
 
           
 
-        - name: Terraform Plan
-          working-directory: terraform
-          run: terraform plan -out=tfplan -input=false -no-color
+#         - name: Terraform Plan
+#           working-directory: terraform
+#           run: terraform plan -out=tfplan -input=false -no-color
           
-        - name: Save Plan
-          uses: actions/upload-artifact@v4
-          with: 
-            name: tfplan
-            path: terraform/tfplan
+#         - name: Save Plan
+#           uses: actions/upload-artifact@v4
+#           with: 
+#             name: tfplan
+#             path: terraform/tfplan
 
 
 
