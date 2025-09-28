@@ -10,7 +10,7 @@ resource "aws_vpc" "vpc" {
 resource "aws_subnet" "public-subnet" {
   vpc_id     = aws_vpc.vpc.id
   cidr_block = var.public-cidr1
-  availability_zone = "us-east2b"
+  availability_zone = "us-east-2b"
 
   tags = {
     Name = "Public Subnet1"
@@ -20,7 +20,7 @@ resource "aws_subnet" "public-subnet" {
 resource "aws_subnet" "private-subnet" {
   vpc_id     = aws_vpc.vpc.id
   cidr_block = var.private-cidr1
-  availability_zone = "us-east2b"
+  availability_zone = "us-east-2b"
 
   tags = {
     Name = "Private Subnet1"
