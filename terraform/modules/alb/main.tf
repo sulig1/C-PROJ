@@ -71,23 +71,23 @@ resource "aws_lb_listener" "listener-http" {         #ALB
 
 #DELETE THIS
 
-# Look up your Route 53 hosted zone
-data "aws_route53_zone" "sulig" {             #R53
-  name         = "sulig.click"
-  private_zone = false   # since it's a public domain
-}
+# # Look up your Route 53 hosted zone
+# data "aws_route53_zone" "sulig" {             #R53
+#   name         = "sulig.click"
+#   private_zone = false   # since it's a public domain
+# }
 
 
-#MOVE THIS TO ACM
-resource "aws_route53_record" "app_domain_link" {            #R53
-  zone_id = data.aws_route53_zone.sulig.id  # Your hosted zone ID
-  name    = "app.sulig.click"                    # Subdomain or root domain
-  type    = "A"
+# #MOVE THIS TO ACM - REMOVE THIS ONE. I ALREADY HAVE THIS IN ACM
+# resource "aws_route53_record" "app_domain_link" {            #R53
+#   zone_id = data.aws_route53_zone.sulig.id  # Your hosted zone ID
+#   name    = "app.sulig.click"                    # Subdomain or root domain
+#   type    = "A"
 
-  alias {
-    name                   = aws_lb.tc_alb.dns_name   # ALB DNS name
-    zone_id                = aws_lb.tc_alb.zone_id   # ALB hosted zone ID
-    evaluate_target_health = true
-  }
-}
+#   alias {
+#     name                   = aws_lb.tc_alb.dns_name   # ALB DNS name
+#     zone_id                = aws_lb.tc_alb.zone_id   # ALB hosted zone ID
+#     evaluate_target_health = true
+#   }
+# }
 
