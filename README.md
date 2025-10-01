@@ -86,3 +86,23 @@ The application runs securely in private subnets, exposed to the internet only t
 
 ## Project Structure
 
+<pre> THREAT-COMP2/ 
+  ├── .github/ │ 
+  └── workflows/ 
+  ├── app/ 
+  ├── terraform/ 
+  │ └── modules/ 
+  └── terraform-bootstrap/
+    </pre>
+
+
+---
+
+## Key Highlights
+
+- **Scalable & Serverless:** ECS Fargate removes EC2 management.  
+- **Secure by Default:** Private subnets, NAT gateways, TLS-only traffic, least-privilege IAM.  
+- **Modular IaC:** Terraform modules = reusable, maintainable setup.  
+- **Automated CI/CD:** GitHub Actions for streamlined deployments.  
+- **Production-Ready:** DNS, HTTPS, logging, and full automation included.  
+
