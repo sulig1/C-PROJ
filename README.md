@@ -106,3 +106,21 @@ The application runs securely in private subnets, exposed to the internet only t
 - **Automated CI/CD:** GitHub Actions for streamlined deployments.  
 - **Production-Ready:** DNS, HTTPS, logging, and full automation included.  
 
+---
+
+## APP Running
+<img width="1920" height="1017" alt="App running" src="https://github.com/user-attachments/assets/db4283cf-fcb2-4095-a286-86a2cbf11284" />
+
+## Docker Build and Push Workflow
+<img width="1912" height="962" alt="Docker Image Push" src="https://github.com/user-attachments/assets/0199a928-2419-4496-a63a-b7d83185fead" />
+
+## Terraform Plan Workflow
+<img width="1920" height="957" alt="Terraform Plan Workflow" src="https://github.com/user-attachments/assets/5e43961d-298b-4af3-9e39-d83ac574ab91" />
+
+
+## Terraform Apply Workflow
+<img width="1897" height="967" alt="Terraform Apply " src="https://github.com/user-attachments/assets/a68722be-8cb9-44aa-9efe-11be6fbd05cd" />
+
+## Terraform Destroy Workflow
+<img width="1920" height="970" alt="Terraform Destroy Workflow" src="https://github.com/user-attachments/assets/7a5b7fb5-61a8-49cd-afa4-044261cac702" />
+
