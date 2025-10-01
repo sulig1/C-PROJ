@@ -1,22 +1,21 @@
-#ECS cluster
-resource "aws_ecs_cluster" "main" {                   #ECS
+resource "aws_ecs_cluster" "main" {                   
   name = var.ecs_cluster_name
 }
 
-#Cloudwatch 
+
 
 resource "aws_cloudwatch_log_group" "ecs_app" {
   name              = var.cloudwatch_log_group_name
-  retention_in_days = 7         #what does this mean?
+  retention_in_days = 7         
 }
 
-#ECS task definition
-resource "aws_ecs_task_definition" "app" {            #ECS
+
+resource "aws_ecs_task_definition" "app" {            
   family                   = var.task_def_family
   network_mode             = var.task_def_network_mode
   requires_compatibilities = var.task_def_rq 
-  cpu                      = var.task_def_cpu  # 0.25 vCPU
-  memory                   = var.task_def_memory   # 512 MB
+  cpu                      = var.task_def_cpu  
+  memory                   = var.task_def_memory   
   execution_role_arn       = var.exec_r_arn
 
   container_definitions = jsonencode([
@@ -32,7 +31,7 @@ resource "aws_ecs_task_definition" "app" {            #ECS
         }
       ]
 
-      #COME BACK TO THIS
+      
 
       logConfiguration = {
       logDriver = "awslogs"
@@ -52,9 +51,9 @@ resource "aws_ecs_task_definition" "app" {            #ECS
 
 
 
-# #ECS Service
 
-resource "aws_ecs_service" "app-ecs" {          #ECS
+
+resource "aws_ecs_service" "app-ecs" {          
   name            = var.ecs-serv-name
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.app.arn

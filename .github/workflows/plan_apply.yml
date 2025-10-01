@@ -2,16 +2,9 @@ name: Terraform Plan and Apply
 
 on:
   workflow_run:
-    workflows: ["Build and Push Docker Image To ECR"]   # Must match the `name` in Workflow A
+    workflows: ["Build and Push Docker Image To ECR"]   
     types:
       - completed
-  # workflow_dispatch:             # Manual trigger for apply
-
-# on: 
-#   push:
-#     branches:
-#       - main
-#   workflow_dispatch:   # allows manual run
 
 jobs:
   plan-job:
@@ -52,8 +45,8 @@ jobs:
   apply-job:
     name: Terraform Apply
     runs-on: ubuntu-latest
-    needs: plan-job           # <-- waits for plan-job to finish
-    environment: production   # optional: enables manual approval in GitHub UI
+    needs: plan-job           
+    environment: production   
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -76,7 +69,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: tfplan
-          path: terraform  # downloads as terraform/tfplan
+          path: terraform  
 
       - name: Terraform Apply
         working-directory: terraform

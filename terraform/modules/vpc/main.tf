@@ -59,7 +59,7 @@ resource "aws_route_table_association" "psubnet-assc" {
 
 
 resource "aws_eip" "nat_eip" {
-  domain = "vpc"   # Required when using VPC-based NAT Gateways
+  domain = "vpc"  
   tags = {
     Name = "nat-elastic-ip"
   }
@@ -98,7 +98,7 @@ resource "aws_route_table_association" "prvt-subnet-assc" {
 }
 
 
-#Creating PublicSubnet2 and PrivateSubnet 2 for new AZ
+
 
 resource "aws_subnet" "public-subnet2" {
   vpc_id     = aws_vpc.vpc.id
@@ -120,7 +120,7 @@ resource "aws_subnet" "private-subnet2" {
   }
 }
 
-#Creating Route Table for PublicSubnet2
+
 resource "aws_route_table" "public2-rt" {
   vpc_id = aws_vpc.vpc.id
 
@@ -142,16 +142,16 @@ resource "aws_route_table_association" "psubnet2-assc" {
 }
 
 
-#creating second elastic IP for second NAT gateway
+
 resource "aws_eip" "nat_eip2" {
-  domain = "vpc"   # Required when using VPC-based NAT Gateways
+  domain = "vpc"   
   tags = {
     Name = "nat-elastic-ip2"
   }
 }
 
 
-#creating NAT in publicSubnet2 for PrivateSubnet2
+
 
 resource "aws_nat_gateway" "NAT-g2" {
   connectivity_type = "public"
@@ -164,7 +164,7 @@ resource "aws_nat_gateway" "NAT-g2" {
 }
 
 
-#Creating RouteTable for PrivateSubnet2
+
 
 resource "aws_route_table" "private2-rt" {
   vpc_id = aws_vpc.vpc.id
@@ -238,11 +238,11 @@ resource "aws_security_group" "ecs_sg" {
     security_groups = [aws_security_group.alb_sg.id]
   }
 
-  #outbound allows all traffic as ecs needs to communicate with NAT/Internet
+  
   egress {
     from_port        = 0
     to_port          = 0
-    protocol         = "-1" #-1 is a special value that means all protocols.  
+    protocol         = "-1"  
     cidr_blocks      = ["0.0.0.0/0"]
   }
 

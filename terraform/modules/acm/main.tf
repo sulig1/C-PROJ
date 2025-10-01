@@ -8,21 +8,21 @@ resource "aws_acm_certificate" "certification" {
 }
 
 
-# Look up your Route 53 hosted zone
-data "aws_route53_zone" "sulig" {             #R53
+
+data "aws_route53_zone" "sulig" {             
   name         = var.hosted_zone_name
-  private_zone = var.private_zone_check  # since it's a public domain
+  private_zone = var.private_zone_check  
 }
 
-#MOVE THIS TO ACM
-resource "aws_route53_record" "app_domain_link" {            #R53
-  zone_id = data.aws_route53_zone.sulig.id  # Your hosted zone ID
-  name    = var.app_domain_name                   # Subdomain or root domain
+
+resource "aws_route53_record" "app_domain_link" {            
+  zone_id = data.aws_route53_zone.sulig.id  
+  name    = var.app_domain_name                  
   type    = var.record_type
 
   alias {
-    name                   = var.alb_dns   # ALB DNS name
-    zone_id                = var.alb_zoneid   # ALB hosted zone ID
+    name                   = var.alb_dns   
+    zone_id                = var.alb_zoneid   
     evaluate_target_health = var.alias_target_health
   }
 }
@@ -38,7 +38,7 @@ resource "aws_route53_record" "val" {
 
  
 
-  allow_overwrite = true #Lets Terraform overwrite an existing record with the same name if it already exists.
+  allow_overwrite = true 
   name            = each.value.name
   records         = [each.value.record]
   ttl             = var.r53_record_ttl
@@ -49,6 +49,6 @@ resource "aws_route53_record" "val" {
 
 
 resource "aws_acm_certificate_validation" "cert-val" {
-  certificate_arn         = aws_acm_certificate.certification.arn #What is arn??? 
+  certificate_arn         = aws_acm_certificate.certification.arn  
   validation_record_fqdns = [for record in aws_route53_record.val : record.fqdn]
 }

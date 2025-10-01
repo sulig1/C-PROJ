@@ -83,23 +83,23 @@ variable "launch_type" {
   
 }
 
-variable "pv_subnet_1" {  #uses modules
+variable "pv_subnet_1" {  
     type = string
 
   
 }
 
-variable "pv_subnet_2" {   #uses modules
+variable "pv_subnet_2" {   
     type = string
   
 }
 
-variable "ecs_sg1" {     #uses modules
+variable "ecs_sg1" {    
     type = string
   
 }
 
-variable "target_group_arn" {   #uses modules
+variable "target_group_arn" {   
     type = string
   
 }
@@ -112,8 +112,7 @@ variable "container_name" {
   
 }
 
-variable "alb_Listener" {  #uses module
-    type = any
+variable "alb_Listener" {  
   
 }
 

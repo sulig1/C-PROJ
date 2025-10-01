@@ -2,14 +2,8 @@ name: Terraform Bootstrap
 
 
 on: 
- workflow_dispatch: #this runs manually as it doesnt have to change once s3 and dynamodb are created 
-# on: 
-#   workflow_run: 
-#     workflows: ["Build and Push Docker Image To ECR"]
-#     types: 
-#       - completed
-#     branches: 
-#       - main
+ workflow_dispatch: 
+
 
 jobs: 
   build: 

@@ -1,7 +1,7 @@
 variable "name_domain" {
     description = "domain name"
     type = string
-    default = "*.sulig.click" #why? in case i need to use like app.sulig.click etc
+    default = "*.sulig.click"
   
 }
 
@@ -56,11 +56,7 @@ variable "r53_record_ttl" {
 
 }
 
-# variable "acm_cert_lifecycle" {
-#     type = bool
-#     default = true
-  
-# }
+
 
 variable "alias_target_health" {
     type = bool
