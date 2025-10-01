@@ -1,12 +1,11 @@
-name: Terraform CI/CD
+name: Terraform Plan and Apply 
 
 on:
-
   workflow_run:
     workflows: ["Build and Push Docker Image To ECR"]   # Must match the `name` in Workflow A
     types:
       - completed
-  workflow_dispatch:             # Manual trigger for apply
+  # workflow_dispatch:             # Manual trigger for apply
 
 # on: 
 #   push:
