@@ -1,7 +1,8 @@
 resource "aws_lb" "tc_alb" {          
   name               = "tc-alb"
   internal           = false                     
-  load_balancer_type = var.lb_type                          
+  load_balancer_type = var.lb_type   
+  subnets = [var.public_subnet_id, var.public_subnet2_id]
   security_groups    = [var.alb_sg1]
 
   enable_deletion_protection = false 
