@@ -8,9 +8,23 @@ resource "aws_acm_certificate" "certification" {
 }
 
 
- data "aws_route53_zone" "example" {
-  name         = "sulig.click"
-  private_zone = false
+# Look up your Route 53 hosted zone
+data "aws_route53_zone" "sulig" {             #R53
+  name         = var.hosted_zone_name
+  private_zone = var.private_zone_check  # since it's a public domain
+}
+
+#MOVE THIS TO ACM
+resource "aws_route53_record" "app_domain_link" {            #R53
+  zone_id = data.aws_route53_zone.sulig.id  # Your hosted zone ID
+  name    = var.app_domain_name                   # Subdomain or root domain
+  type    = var.record_type
+
+  alias {
+    name                   = var.alb_dns   # ALB DNS name
+    zone_id                = var.alb_zoneid   # ALB hosted zone ID
+    evaluate_target_health = var.alias_target_health
+  }
 }
 
 resource "aws_route53_record" "val" {
@@ -27,9 +41,9 @@ resource "aws_route53_record" "val" {
   allow_overwrite = true #Lets Terraform overwrite an existing record with the same name if it already exists.
   name            = each.value.name
   records         = [each.value.record]
-  ttl             = 60
+  ttl             = var.r53_record_ttl
   type            = each.value.type
-  zone_id         = data.aws_route53_zone.example.zone_id
+  zone_id         = data.aws_route53_zone.sulig.zone_id
 
 }
 

@@ -22,6 +22,9 @@ variable "public_subnet2_id" {
 
 variable "lb_type" {
     description = "load balancer type"
+    type = string
+    default = "application"
+  
   
 }
 
@@ -32,12 +35,16 @@ variable "tg1" {
 }
 
 variable "port1" {
+    description = "target group port"
     type = string
+    default = "3000"
   
 }
 
 variable "protocol1" {
+    description = "target group protocol"
     type = string
+    default = "HTTP"
   
 }
 

@@ -17,6 +17,8 @@ resource "aws_subnet" "public-subnet" {
   }
 }
 
+
+
 resource "aws_subnet" "private-subnet" {
   vpc_id     = aws_vpc.vpc.id
   cidr_block = var.private-cidr1
@@ -94,6 +96,98 @@ resource "aws_route_table_association" "prvt-subnet-assc" {
   subnet_id      = aws_subnet.private-subnet.id
   route_table_id = aws_route_table.private-rt.id
 }
+
+
+#Creating PublicSubnet2 and PrivateSubnet 2 for new AZ
+
+resource "aws_subnet" "public-subnet2" {
+  vpc_id     = aws_vpc.vpc.id
+  cidr_block = var.public-cidr2
+  availability_zone       = "us-east-2c"
+
+  tags = {
+    Name = "Public Subnet2"
+  }
+}
+
+resource "aws_subnet" "private-subnet2" {
+  vpc_id     = aws_vpc.vpc.id
+  cidr_block = var.private-cidr2
+  availability_zone       = "us-east-2c"
+
+  tags = {
+    Name = "Private Subnet2"
+  }
+}
+
+#Creating Route Table for PublicSubnet2
+resource "aws_route_table" "public2-rt" {
+  vpc_id = aws_vpc.vpc.id
+
+  tags = {
+    Name = "public2-route table"
+  }
+}
+
+resource "aws_route" "public2-rt-route" {
+  route_table_id            = aws_route_table.public2-rt.id
+  destination_cidr_block    = "0.0.0.0/0"
+  gateway_id                = aws_internet_gateway.gw.id
+}
+
+
+resource "aws_route_table_association" "psubnet2-assc" {
+  subnet_id      = aws_subnet.public-subnet2.id
+  route_table_id = aws_route_table.public2-rt.id
+}
+
+
+#creating second elastic IP for second NAT gateway
+resource "aws_eip" "nat_eip2" {
+  domain = "vpc"   # Required when using VPC-based NAT Gateways
+  tags = {
+    Name = "nat-elastic-ip2"
+  }
+}
+
+
+#creating NAT in publicSubnet2 for PrivateSubnet2
+
+resource "aws_nat_gateway" "NAT-g2" {
+  connectivity_type = "public"
+  allocation_id     =  aws_eip.nat_eip2.id
+  subnet_id         = aws_subnet.public-subnet2.id
+
+  tags = {
+    Name = "custom-nat2"
+  }
+}
+
+
+#Creating RouteTable for PrivateSubnet2
+
+resource "aws_route_table" "private2-rt" {
+  vpc_id = aws_vpc.vpc.id
+
+  tags = {
+    Name = "private2- route table"
+  }
+}
+
+resource "aws_route" "private2-rt-route" {
+  route_table_id            = aws_route_table.private2-rt.id
+  destination_cidr_block    = "0.0.0.0/0"
+  gateway_id                = aws_nat_gateway.NAT-g2.id
+}
+
+resource "aws_route_table_association" "private2-subnet-assc" {
+  subnet_id      = aws_subnet.private-subnet2.id
+  route_table_id = aws_route_table.private2-rt.id
+}
+
+
+
+
 
 resource "aws_security_group" "alb_sg" {
   name        = "SG for ALB"
@@ -183,89 +277,3 @@ resource "aws_security_group" "ecs_sg" {
 
 
 
-#Creating PublicSubnet2 and PrivateSubnet 2 for new AZ
-
-resource "aws_subnet" "public-subnet2" {
-  vpc_id     = aws_vpc.vpc.id
-  cidr_block = var.public-cidr2
-  availability_zone       = "us-east-2c"
-
-  tags = {
-    Name = "Public Subnet2"
-  }
-}
-
-resource "aws_subnet" "private-subnet2" {
-  vpc_id     = aws_vpc.vpc.id
-  cidr_block = var.private-cidr2
-  availability_zone       = "us-east-2c"
-
-  tags = {
-    Name = "Private Subnet2"
-  }
-}
-
-#Creating Route Table for PublicSubnet2
-resource "aws_route_table" "public2-rt" {
-  vpc_id = aws_vpc.vpc.id
-
-  tags = {
-    Name = "public2-route table"
-  }
-}
-
-resource "aws_route" "public2-rt-route" {
-  route_table_id            = aws_route_table.public2-rt.id
-  destination_cidr_block    = "0.0.0.0/0"
-  gateway_id                = aws_internet_gateway.gw.id
-}
-
-
-resource "aws_route_table_association" "psubnet2-assc" {
-  subnet_id      = aws_subnet.public-subnet2.id
-  route_table_id = aws_route_table.public2-rt.id
-}
-
-
-#creating second elastic IP for second NAT gateway
-resource "aws_eip" "nat_eip2" {
-  domain = "vpc"   # Required when using VPC-based NAT Gateways
-  tags = {
-    Name = "nat-elastic-ip2"
-  }
-}
-
-
-#creating NAT in publicSubnet2 for PrivateSubnet2
-
-resource "aws_nat_gateway" "NAT-g2" {
-  connectivity_type = "public"
-  allocation_id     =  aws_eip.nat_eip2.id
-  subnet_id         = aws_subnet.public-subnet2.id
-
-  tags = {
-    Name = "custom-nat2"
-  }
-}
-
-
-#Creating RouteTable for PrivateSubnet2
-
-resource "aws_route_table" "private2-rt" {
-  vpc_id = aws_vpc.vpc.id
-
-  tags = {
-    Name = "private2- route table"
-  }
-}
-
-resource "aws_route" "private2-rt-route" {
-  route_table_id            = aws_route_table.private2-rt.id
-  destination_cidr_block    = "0.0.0.0/0"
-  gateway_id                = aws_nat_gateway.NAT-g2.id
-}
-
-resource "aws_route_table_association" "private2-subnet-assc" {
-  subnet_id      = aws_subnet.private-subnet2.id
-  route_table_id = aws_route_table.private2-rt.id
-}

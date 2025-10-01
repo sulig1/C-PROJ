@@ -1,4 +1,4 @@
-resource "aws_lb" "tc_alb" {
+resource "aws_lb" "tc_alb" {          #ALB
   name               = "tc-alb"
   internal           = false                     # false = internet-facing, true = internal
   load_balancer_type = var.lb_type                          
@@ -15,7 +15,7 @@ resource "aws_lb" "tc_alb" {
 
 #target group 
 
-resource "aws_lb_target_group" "tc-target-group" {
+resource "aws_lb_target_group" "tc-target-group" {   #ALB
   name     = "ecs-tg" 
   port     = var.port1 #3000
   protocol = var.protocol1 #http
@@ -34,11 +34,8 @@ resource "aws_lb_target_group" "tc-target-group" {
 
 
 
-
-
-
 #listener for HTTPS
-resource "aws_lb_listener" "listener-https" {
+resource "aws_lb_listener" "listener-https" {     #ALB
   load_balancer_arn = aws_lb.tc_alb.arn
   port              = "443"
   protocol          = "HTTPS"
@@ -52,7 +49,7 @@ resource "aws_lb_listener" "listener-https" {
 }
 
 #listener for HTTP
-resource "aws_lb_listener" "listener-http" {
+resource "aws_lb_listener" "listener-http" {         #ALB
   load_balancer_arn = aws_lb.tc_alb.arn
   port              = "80"
   protocol          = "HTTP"
@@ -69,121 +66,28 @@ resource "aws_lb_listener" "listener-http" {
   }
 }
 
-#Cloudwatch 
-
-resource "aws_cloudwatch_log_group" "ecs_app" {
-  name              = "/ecs/ecs-app"
-  retention_in_days = 7
-}
-
-#IAM Execution Role
-
-resource "aws_iam_role" "ecs_task_execution" {
-  name = "ecsTaskExecutionRole"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Principal = {
-          Service = "ecs-tasks.amazonaws.com"
-        }
-        Action = "sts:AssumeRole"
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
-  role       = aws_iam_role.ecs_task_execution.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
-}
-
-
-#ECS cluster
-resource "aws_ecs_cluster" "main" {
-  name = "ecs-cluster-main"
-}
-
-#ECS task definition
-resource "aws_ecs_task_definition" "app" {
-  family                   = "ecs-threat-app"
-  network_mode             = "awsvpc"
-  requires_compatibilities = ["FARGATE"]
-  cpu                      = "256"   # 0.25 vCPU
-  memory                   = "512"   # 512 MB
-  execution_role_arn       = aws_iam_role.ecs_task_execution.arn
-
-  container_definitions = jsonencode([
-    {
-      name      = "my-container"
-      image     = "866605741514.dkr.ecr.us-east-2.amazonaws.com/threat-compose-workflow:latest"
-      essential = true
-      portMappings = [
-        {
-          containerPort = 3000
-          hostPort      = 3000
-          protocol      = "tcp"
-        }
-      ]
-
-      #COME BACK TO THIS
-
-      logConfiguration = {
-      logDriver = "awslogs"
-      options = {
-      awslogs-group         =  aws_cloudwatch_log_group.ecs_app.name
-      awslogs-region        = "us-east-2"
-      awslogs-stream-prefix = "ecs"
-  }
-}
 
 
 
-    }
-  ])
-}
+#DELETE THIS
 
-# #ECS Service
+# # Look up your Route 53 hosted zone
+# data "aws_route53_zone" "sulig" {             #R53
+#   name         = "sulig.click"
+#   private_zone = false   # since it's a public domain
+# }
 
-resource "aws_ecs_service" "app-ecs" {
-  name            = "ecs-service-app"
-  cluster         = aws_ecs_cluster.main.id
-  task_definition = aws_ecs_task_definition.app.arn
-  desired_count   = 2
-  launch_type     = "FARGATE"
 
-  network_configuration {
-    subnets         = [var.private1_subnet, var.private2_subnet]
-    security_groups = [var.ecs_sg1]
-    assign_public_ip = false
-  }
+# #MOVE THIS TO ACM - REMOVE THIS ONE. I ALREADY HAVE THIS IN ACM
+# resource "aws_route53_record" "app_domain_link" {            #R53
+#   zone_id = data.aws_route53_zone.sulig.id  # Your hosted zone ID
+#   name    = "app.sulig.click"                    # Subdomain or root domain
+#   type    = "A"
 
-  load_balancer {
-    target_group_arn = aws_lb_target_group.tc-target-group.arn
-    container_name   = "my-container"
-    container_port   = 3000
-  }
-
-  depends_on = [aws_lb_listener.listener-https]
-}
-
-# Look up your Route 53 hosted zone
-data "aws_route53_zone" "sulig" {
-  name         = "sulig.click"
-  private_zone = false   # since it's a public domain
-}
-
-resource "aws_route53_record" "app_domain_link" {
-  zone_id = data.aws_route53_zone.sulig.id  # Your hosted zone ID
-  name    = "app.sulig.click"                    # Subdomain or root domain
-  type    = "A"
-
-  alias {
-    name                   = aws_lb.tc_alb.dns_name   # ALB DNS name
-    zone_id                = aws_lb.tc_alb.zone_id   # ALB hosted zone ID
-    evaluate_target_health = true
-  }
-}
+#   alias {
+#     name                   = aws_lb.tc_alb.dns_name   # ALB DNS name
+#     zone_id                = aws_lb.tc_alb.zone_id   # ALB hosted zone ID
+#     evaluate_target_health = true
+#   }
+# }
 
