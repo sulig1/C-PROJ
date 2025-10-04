@@ -62,7 +62,7 @@ variable "ecr_uri" {
 variable "port_number" {
     type = number
     description = "port number for my application"
-    default = 3000
+    default = 80
     
   
 }

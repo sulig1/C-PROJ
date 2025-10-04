@@ -37,7 +37,7 @@ variable "tg1" {
 variable "port1" {
     description = "target group port"
     type = string
-    default = "3000"
+    default = "80"
   
 }
 
