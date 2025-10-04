@@ -8,6 +8,7 @@ on:
 
 jobs:
   plan-job:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: Terraform Plan
     runs-on: ubuntu-latest
     steps:
