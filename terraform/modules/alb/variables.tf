@@ -63,3 +63,38 @@ variable "cert_arn" {
   
 }
 
+variable "load_balancer_name" {
+    type = string 
+    default = "tc-alb"
+  
+}
+
+variable "alb_target_group_name" {
+    type = string
+    default = "ecs-tg"
+  
+}
+
+variable "alb_target_group_target_type" {
+    type = string
+    default = "ip"
+  
+}
+
+variable "https_listener_port" {
+    type = string
+    default = "443"
+  
+}
+
+variable "https_listener_ssl_policy" {
+    type = string
+    default = "ELBSecurityPolicy-2016-08"
+  
+}
+
+variable "http_listener_port" {
+    type = string
+    default = "80"
+  
+}

@@ -3,17 +3,17 @@ resource "aws_vpc" "vpc" {
   instance_tenancy = "default"
 
   tags = {
-    Name = "my-custom-vpc"
+    Name = var.vpc_name
   }
 }
 
 resource "aws_subnet" "public-subnet" {
   vpc_id     = aws_vpc.vpc.id
   cidr_block = var.public-cidr1
-  availability_zone = "us-east-2b"
+  availability_zone = var.public_subnet_AZ
 
   tags = {
-    Name = "Public Subnet1"
+    Name = var.public_subnet_name
   }
 }
 
@@ -22,18 +22,18 @@ resource "aws_subnet" "public-subnet" {
 resource "aws_subnet" "private-subnet" {
   vpc_id     = aws_vpc.vpc.id
   cidr_block = var.private-cidr1
-  availability_zone = "us-east-2b"
+  availability_zone = var.public_subnet_AZ
 
   tags = {
-    Name = "Private Subnet1"
+    Name = var.private_subnet_name
   }
 }
 
-resource "aws_internet_gateway" "gw" {
+resource "aws_internet_gateway" "gw" { 
   vpc_id = aws_vpc.vpc.id
 
   tags = {
-    Name = "Custom IGW"
+    Name = var.igw_name
   }
 }
 
@@ -41,7 +41,7 @@ resource "aws_route_table" "public-rt" {
   vpc_id = aws_vpc.vpc.id
 
   tags = {
-    Name = "ps-route table"
+    Name = var.public_route_tabel1_name
   }
 }
 
@@ -61,7 +61,7 @@ resource "aws_route_table_association" "psubnet-assc" {
 resource "aws_eip" "nat_eip" {
   domain = "vpc"  
   tags = {
-    Name = "nat-elastic-ip"
+    Name = var.elastic_ip1_name
   }
 }
 
@@ -74,7 +74,7 @@ resource "aws_nat_gateway" "NAT" {
   subnet_id         = aws_subnet.public-subnet.id
 
   tags = {
-    Name = "custom-NAT"
+    Name = var.nat1_name
   }
 }
 
@@ -82,7 +82,7 @@ resource "aws_route_table" "private-rt" {
   vpc_id = aws_vpc.vpc.id
 
   tags = {
-    Name = "privat- route table"
+    Name = var.private_route_table1_name
   }
 }
 
@@ -103,20 +103,20 @@ resource "aws_route_table_association" "prvt-subnet-assc" {
 resource "aws_subnet" "public-subnet2" {
   vpc_id     = aws_vpc.vpc.id
   cidr_block = var.public-cidr2
-  availability_zone       = "us-east-2c"
+  availability_zone       = var.public_subnet2_AZ
 
   tags = {
-    Name = "Public Subnet2"
+    Name = var.public_subnet2_name
   }
 }
 
 resource "aws_subnet" "private-subnet2" {
   vpc_id     = aws_vpc.vpc.id
   cidr_block = var.private-cidr2
-  availability_zone       = "us-east-2c"
+  availability_zone       = var.public_subnet2_AZ
 
   tags = {
-    Name = "Private Subnet2"
+    Name = var.private_subnet2_name
   }
 }
 
@@ -125,7 +125,7 @@ resource "aws_route_table" "public2-rt" {
   vpc_id = aws_vpc.vpc.id
 
   tags = {
-    Name = "public2-route table"
+    Name = var.public_route_tabel2_name
   }
 }
 
@@ -146,7 +146,7 @@ resource "aws_route_table_association" "psubnet2-assc" {
 resource "aws_eip" "nat_eip2" {
   domain = "vpc"   
   tags = {
-    Name = "nat-elastic-ip2"
+    Name = var.elastic_ip2_name
   }
 }
 
@@ -159,7 +159,7 @@ resource "aws_nat_gateway" "NAT-g2" {
   subnet_id         = aws_subnet.public-subnet2.id
 
   tags = {
-    Name = "custom-nat2"
+    Name = var.nat_gateway2_name
   }
 }
 
@@ -170,7 +170,7 @@ resource "aws_route_table" "private2-rt" {
   vpc_id = aws_vpc.vpc.id
 
   tags = {
-    Name = "private2- route table"
+    Name = var.private_route_table2_name
   }
 }
 
@@ -196,18 +196,18 @@ resource "aws_security_group" "alb_sg" {
   
   ingress {
     description      = "Allow HTTP traffic"
-    from_port        = 80
-    to_port          = 80
+    from_port        = var.http_port
+    to_port          = var.http_port
     protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"] 
+    cidr_blocks      = var.ingress_cidr_alb_sg
   }
 
   ingress {
     description      = "Allow HTTPS traffic"
-    from_port        = 443
-    to_port          = 443
+    from_port        = var.https_port
+    to_port          = var.https_port
     protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"] 
+    cidr_blocks      = var.ingress_cidr_alb_sg
   }
 
   
@@ -215,12 +215,12 @@ resource "aws_security_group" "alb_sg" {
     from_port        = 0
     to_port          = 0
     protocol         = "-1" 
-    cidr_blocks      = ["0.0.0.0/0"]
+    cidr_blocks      = var.egress_cidr_alb_sg
   }
 
 
   tags = {
-    Name = "alb-sg"
+    Name = var.load_balancer_security_group
   }
 }
 
@@ -232,8 +232,8 @@ resource "aws_security_group" "ecs_sg" {
   
   ingress {
     description      = "Allows traffic from ALB"
-    from_port        = 80
-    to_port          = 80
+    from_port        = var.http_port
+    to_port          = var.http_port
     protocol         = "tcp"
     security_groups = [aws_security_group.alb_sg.id]
   }
@@ -243,12 +243,12 @@ resource "aws_security_group" "ecs_sg" {
     from_port        = 0
     to_port          = 0
     protocol         = "-1"  
-    cidr_blocks      = ["0.0.0.0/0"]
+    cidr_blocks      = var.egress_cidr_alb_sg
   }
 
 
   tags = {
-    Name = "ecs-sg"
+    Name = var.ecs_security_group_name
   }
 }
 

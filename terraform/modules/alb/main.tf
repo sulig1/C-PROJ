@@ -1,5 +1,5 @@
 resource "aws_lb" "tc_alb" {          
-  name               = "tc-alb"
+  name               = var.load_balancer_name
   internal           = false                     
   load_balancer_type = var.lb_type   
   subnets = [var.public_subnet_id, var.public_subnet2_id]
@@ -8,7 +8,7 @@ resource "aws_lb" "tc_alb" {
   enable_deletion_protection = false 
 
   tags = {
-    Name = "tc-alb"
+    Name = var.load_balancer_name
   }
 }
 
@@ -16,11 +16,11 @@ resource "aws_lb" "tc_alb" {
 
 
 resource "aws_lb_target_group" "tc-target-group" {  
-  name     = "ecs-tg" 
+  name     = var.alb_target_group_name
   port     = var.port1 
   protocol = var.protocol1 
   vpc_id   = var.tg1
-  target_type = "ip"
+  target_type = var.alb_target_group_target_type
 
   health_check { 
     path                = "/" 
@@ -37,9 +37,9 @@ resource "aws_lb_target_group" "tc-target-group" {
 
 resource "aws_lb_listener" "listener-https" {     
   load_balancer_arn = aws_lb.tc_alb.arn
-  port              = "443"
+  port              = var.https_listener_port
   protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  ssl_policy        = var.https_listener_ssl_policy
   certificate_arn   = var.cert_arn
 
   default_action {
@@ -51,7 +51,7 @@ resource "aws_lb_listener" "listener-https" {
 
 resource "aws_lb_listener" "listener-http" {         
   load_balancer_arn = aws_lb.tc_alb.arn
-  port              = "80"
+  port              = var.http_listener_port
   protocol          = "HTTP"
  
   default_action {
@@ -59,7 +59,7 @@ resource "aws_lb_listener" "listener-http" {
     
     
     redirect {
-      port        = "443"
+      port        = var.https_listener_port
       protocol    = "HTTPS"
       status_code = "HTTP_301"
     }
