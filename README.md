@@ -1,6 +1,6 @@
 # AWS ECS Deployment
 
-This project provisions and deploys a containerised web application (Thread Composer) on AWS ECS Fargate, using Infrastructure as Code  and automated CI/CD pipelines with GitHub Actions.
+This project provisions and deploys a containerised web application (AWS Threat Composer) on AWS ECS Fargate, using Infrastructure as Code  and automated CI/CD pipelines with GitHub Actions.
 
 The application runs securely in private subnets, exposed to the internet only through an Application Load Balancer  with HTTPS enabled via AWS Certificate Manager.
 
