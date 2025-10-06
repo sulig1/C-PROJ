@@ -6,6 +6,14 @@ The application runs securely in private subnets, exposed to the internet only t
 
 ---
 
+## Architecture Diagram
+
+<img width="1920" height="1080" alt="Architecture Diagram" src="https://github.com/user-attachments/assets/34dd20e3-0a37-446d-b3cc-e03768a7efd7" />
+
+
+
+---
+
 ## Architecture Overview
 
 ### VPC
