@@ -15,6 +15,7 @@ The application runs securely in private subnets, exposed to the internet only t
 
 ---
 
+
 ### Networking & Security
 - **Public subnets:** Host the ALB.  
 - **Private subnets:** Host ECS Fargate tasks.  
@@ -84,19 +85,6 @@ The application runs securely in private subnets, exposed to the internet only t
 
 ---
 
-## Project Structure
-
-<pre> THREAT-COMP2/ 
-  ├── .github/ │ 
-  └── workflows/ 
-  ├── app/ 
-  ├── terraform/ 
-  │ └── modules/ 
-  └── terraform-bootstrap/
-    </pre>
-
-
----
 
 ## Key Highlights
 
