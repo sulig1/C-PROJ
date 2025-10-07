@@ -26,9 +26,23 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build and Push to ECR
+      - name: Build Docker Image
+        run: |
+          docker build -t threatimage ./app
+
+      - name: Scan Docker Image with Trivy
+        uses: aquasecurity/trivy-action@v2
+        with:
+          image-ref: threatimage:latest
+          format: table
+          exit-code: 1        
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+
+      - name: Tag and Push to ECR
         run: |
           Image_URI=${{ secrets.ECR_URI }}
-          docker build -t threatimage ./app
           docker tag threatimage $Image_URI:latest
           docker push $Image_URI:latest
+
+    
