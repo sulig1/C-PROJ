@@ -5,11 +5,7 @@ RUN yarn install --frozen-lockfile
 COPY . .
 RUN yarn build
 FROM nginx:alpine
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-RUN rm -rf /usr/share/nginx/html/*
+WORKDIR /app
 COPY --from=builder /app/build /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/nginx.conf
-RUN chown -R appuser:appgroup /usr/share/nginx/html
-USER appuser
-EXPOSE 8080
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
