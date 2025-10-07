@@ -1,4 +1,5 @@
 variable "region" {
+    type = string
     description = "AWS access key"
     default = "us-east-2"
   
@@ -6,20 +7,9 @@ variable "region" {
 
 
 
-variable "aws_log_region" {
-    type = string
-    default = "us-east-2"
-  
-}
 
 
 
-
-variable "dynamodb_table_name" {
-    type = string
-    default = "tf-protection-locks"
-  
-}
 
 
 
