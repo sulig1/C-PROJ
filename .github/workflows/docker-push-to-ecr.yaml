@@ -31,7 +31,7 @@ jobs:
           docker build -t threatimage ./app
 
       - name: Scan Docker Image with Trivy
-        uses: aquasecurity/trivy-action@v2
+        uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: threatimage:latest
           format: table
