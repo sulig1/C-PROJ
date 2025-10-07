@@ -33,6 +33,25 @@ jobs:
         working-directory: terraform
         run: terraform validate
 
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: latest
+
+      - name: Run TFLint
+        working-directory: terraform
+        run: |
+          echo "Running TFLint..."
+          tflint --init
+          tflint -f compact
+
+      - name: Run Checkov Scan
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: terraform
+          framework: terraform
+          soft_fail: true 
+
       - name: Terraform Plan
         working-directory: terraform
         run: terraform plan -out=tfplan -input=false -no-color
