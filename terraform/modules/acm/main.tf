@@ -8,7 +8,6 @@ resource "aws_acm_certificate" "certification" {
 }
 
 
-
 data "aws_route53_zone" "sulig" {            
   name         = var.hosted_zone_name 
   private_zone = var.private_zone_check  
@@ -26,6 +25,7 @@ resource "aws_route53_record" "app_domain_link" {
     evaluate_target_health = var.alias_target_health 
   }
 }
+
 
 resource "aws_route53_record" "val" { 
   for_each = {   

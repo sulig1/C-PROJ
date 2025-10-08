@@ -3,7 +3,6 @@ resource "aws_ecs_cluster" "main" {
 }
 
 
-
 resource "aws_cloudwatch_log_group" "ecs_app" {
   name              = var.cloudwatch_log_group_name
   retention_in_days = 7         
@@ -31,8 +30,6 @@ resource "aws_ecs_task_definition" "app" {
         }
       ]
 
-      
-
       logConfiguration = {
       logDriver = "awslogs"
       options = {
@@ -41,16 +38,10 @@ resource "aws_ecs_task_definition" "app" {
       awslogs-stream-prefix = "ecs"
   }
 }
-
-
-
     }
   ])
   
 }
-
-
-
 
 
 resource "aws_ecs_service" "app-ecs" {          

@@ -13,8 +13,6 @@ resource "aws_lb" "tc_alb" {
 }
 
 
-
-
 resource "aws_lb_target_group" "tc-target-group" {  
   name     = var.alb_target_group_name
   port     = var.port1 
@@ -31,8 +29,6 @@ resource "aws_lb_target_group" "tc-target-group" {
     matcher             = "200-399" 
   }
 }
-
-
 
 
 resource "aws_lb_listener" "listener-https" {     

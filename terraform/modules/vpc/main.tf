@@ -7,6 +7,7 @@ resource "aws_vpc" "vpc" {
   }
 }
 
+
 resource "aws_subnet" "public-subnet" {
   vpc_id     = aws_vpc.vpc.id
   cidr_block = var.public-cidr1
@@ -16,7 +17,6 @@ resource "aws_subnet" "public-subnet" {
     Name = var.public_subnet_name
   }
 }
-
 
 
 resource "aws_subnet" "private-subnet" {
@@ -29,6 +29,7 @@ resource "aws_subnet" "private-subnet" {
   }
 }
 
+
 resource "aws_internet_gateway" "gw" { 
   vpc_id = aws_vpc.vpc.id
 
@@ -37,6 +38,7 @@ resource "aws_internet_gateway" "gw" {
   }
 }
 
+
 resource "aws_route_table" "public-rt" {
   vpc_id = aws_vpc.vpc.id
 
@@ -44,6 +46,7 @@ resource "aws_route_table" "public-rt" {
     Name = var.public_route_tabel1_name
   }
 }
+
 
 resource "aws_route" "rt-route" {
   route_table_id            = aws_route_table.public-rt.id
@@ -66,8 +69,6 @@ resource "aws_eip" "nat_eip" {
 }
 
 
-
-
 resource "aws_nat_gateway" "NAT" {
   connectivity_type = "public"
   allocation_id     =  aws_eip.nat_eip.id 
@@ -78,6 +79,7 @@ resource "aws_nat_gateway" "NAT" {
   }
 }
 
+
 resource "aws_route_table" "private-rt" {
   vpc_id = aws_vpc.vpc.id
 
@@ -86,18 +88,18 @@ resource "aws_route_table" "private-rt" {
   }
 }
 
+
 resource "aws_route" "private-rt-route" {
   route_table_id            = aws_route_table.private-rt.id
   destination_cidr_block    = "0.0.0.0/0"
   gateway_id                = aws_nat_gateway.NAT.id
 }
 
+
 resource "aws_route_table_association" "prvt-subnet-assc" {
   subnet_id      = aws_subnet.private-subnet.id
   route_table_id = aws_route_table.private-rt.id
 }
-
-
 
 
 resource "aws_subnet" "public-subnet2" {
@@ -109,6 +111,7 @@ resource "aws_subnet" "public-subnet2" {
     Name = var.public_subnet2_name
   }
 }
+
 
 resource "aws_subnet" "private-subnet2" {
   vpc_id     = aws_vpc.vpc.id
@@ -129,6 +132,7 @@ resource "aws_route_table" "public2-rt" {
   }
 }
 
+
 resource "aws_route" "public2-rt-route" {
   route_table_id            = aws_route_table.public2-rt.id
   destination_cidr_block    = "0.0.0.0/0"
@@ -142,15 +146,12 @@ resource "aws_route_table_association" "psubnet2-assc" {
 }
 
 
-
 resource "aws_eip" "nat_eip2" {
   domain = "vpc"   
   tags = {
     Name = var.elastic_ip2_name
   }
 }
-
-
 
 
 resource "aws_nat_gateway" "NAT-g2" {
@@ -164,8 +165,6 @@ resource "aws_nat_gateway" "NAT-g2" {
 }
 
 
-
-
 resource "aws_route_table" "private2-rt" {
   vpc_id = aws_vpc.vpc.id
 
@@ -174,19 +173,18 @@ resource "aws_route_table" "private2-rt" {
   }
 }
 
+
 resource "aws_route" "private2-rt-route" {
   route_table_id            = aws_route_table.private2-rt.id
   destination_cidr_block    = "0.0.0.0/0"
   gateway_id                = aws_nat_gateway.NAT-g2.id
 }
 
+
 resource "aws_route_table_association" "private2-subnet-assc" {
   subnet_id      = aws_subnet.private-subnet2.id
   route_table_id = aws_route_table.private2-rt.id
 }
-
-
-
 
 
 resource "aws_security_group" "alb_sg" {
@@ -210,14 +208,12 @@ resource "aws_security_group" "alb_sg" {
     cidr_blocks      = var.ingress_cidr_alb_sg
   }
 
-  
   egress {
     from_port        = 0
     to_port          = 0
     protocol         = "-1" 
     cidr_blocks      = var.egress_cidr_alb_sg
   }
-
 
   tags = {
     Name = var.load_balancer_security_group
@@ -238,14 +234,12 @@ resource "aws_security_group" "ecs_sg" {
     security_groups = [aws_security_group.alb_sg.id]
   }
 
-  
   egress {
     from_port        = 0
     to_port          = 0
     protocol         = "-1"  
     cidr_blocks      = var.egress_cidr_alb_sg
   }
-
 
   tags = {
     Name = var.ecs_security_group_name

@@ -1,9 +1,7 @@
 module "vpc" {
     source = "./modules/vpc" 
-
-   
-   
 }
+
 
 module "alb" {
     source = "./modules/alb"
@@ -16,11 +14,8 @@ module "alb" {
     private2_subnet = module.vpc.private_subnet2
     ecs_sg1 = module.vpc.ecs_sg
     cert_arn = module.acm.certificate_arn
-    
-
-    
-
 }
+
 
 module "acm" {
     source = "./modules/acm"
@@ -29,10 +24,11 @@ module "acm" {
     alb_zoneid = module.alb.alb_zone_id
 }
 
+
 module "iam" {
     source = "./modules/iam"
-  
 }
+
 
 module "ecs" {
     source = "./modules/ecs"
@@ -41,7 +37,5 @@ module "ecs" {
     pv_subnet_2 = module.vpc.private_subnet2
     ecs_sg1 = module.vpc.ecs_sg
     target_group_arn = module.alb.tg_arn
-    alb_Listener = module.alb.listener
-    
-    
+    alb_Listener = module.alb.listener 
 }

@@ -1,5 +1,3 @@
-
-
 resource "aws_iam_role" "ecs_task_execution" {            
   name = "ecsTaskExecutionRole" 
 
@@ -16,6 +14,7 @@ resource "aws_iam_role" "ecs_task_execution" {
     ]
   })
 }
+
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution" {        
   role       = aws_iam_role.ecs_task_execution.name
